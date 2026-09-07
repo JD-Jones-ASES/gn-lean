@@ -1,0 +1,126 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/mathlib-initiative/formalization.yaml/main/schema/formalization.schema.json
+version: "v0.4"
+
+project:
+  name: "gn-lean: the Gurvich–Naumova partition conjecture"
+  description: >-
+    A Lean 4 proof that for every nonnegative integer n, the distinct integers
+    1,...,n can be partitioned into nonempty sets of at most three elements,
+    each having sum equal to a nonnegative integer power of three. This proves
+    Conjecture 1 of Gurvich and Naumova, arXiv:2508.00946v3. The development
+    constructs permutations with all prescribed nonzero displacements, derives
+    signed zero-sum triple partitions, proves a contraction and complement-pair
+    extension, and completes strong induction on n. All required finite
+    certificates and unbounded sequence constructions are proved in Lean.
+  authors: ["JD Jones"]
+  responsible_maintainers: ["JD Jones"]
+  license: "MIT"
+
+classification:
+  arxiv: ["math.CO", "math.NT"]
+  msc2020: ["05A17", "11B75"]
+
+sources:
+  - title: >-
+      Partitioning set [n]={1,...,n} into subsets of size at most m such that
+      all sums are powers of m
+    authors: ["Vladimir Gurvich", "Mariya Naumova"]
+    id: "arXiv:2508.00946v3"
+    type: "paper"
+    location: "https://arxiv.org/abs/2508.00946v3"
+    relationship: "adapts"
+    author_endorsement: "not-contacted"
+    note: >-
+      Supplies Conjecture 1 for m=3 and the elementary interval reductions.
+      The recorded theorem extends the source's proved results by establishing
+      that conjecture. The full proof is not attributed to the source authors.
+      No result for arbitrary m is claimed here.
+  - title: "Hooked extended Langford sequences of small and large defects"
+    authors: ["S. Mor", "V. Linek"]
+    id: "doi:10.2478/s12175-014-0242-6"
+    type: "paper"
+    location: "https://doi.org/10.2478/s12175-014-0242-6"
+    relationship: "adapts"
+    author_endorsement: "not-contacted"
+    note: >-
+      Supplies the mathematical formulas adapted in GN/LangfordTables.lean for
+      excesses six, seven, and eight. The formalization proves endpoint coverage,
+      differences, cardinality bounds, pivots, reflections, and every required
+      hole case. The excess-one and excess-two tables are independently derived
+      in this repository. The paper is not imported as an axiom.
+
+status:
+  scope: >-
+    The single compared theorem proves the m=3 partition conjecture for every
+    n, including the auxiliary empty interval. Blocks are finite sets, are
+    nonempty and pairwise disjoint, cover exactly {1,...,n}, have cardinality
+    at most three, and have sum 3^k for some natural k. The formalization makes
+    no claim about partitions for general m, optimality, uniqueness, or counts.
+    The intentional placeholder in Challenge.lean is excluded from the proof
+    counts. Solution does not import Challenge.
+  sorry_count: 0
+  sorry_in_definitions: 0
+  axioms: ["propext", "Classical.choice", "Quot.sound"]
+  main_results:
+    - declaration: "GurvichNaumova.partition_into_powers_of_three"
+      file: "Solution.lean"
+      sorry_count: 0
+      axioms: ["propext", "Classical.choice", "Quot.sound"]
+      comparator_config: "comparator.json"
+
+automation:
+  methods:
+    - method: "agent"
+      models: ["OpenAI Codex (GPT-6)"]
+      framework: "Codex with parallel mathematical and Lean agents"
+      tool_setup: >-
+        AI agents generated substantial mathematics, Lean code, finite
+        certificate searches, and affine table synthesis under JD Jones's
+        direction. Lean 4.33.0 and Mathlib are pinned. Finite tables are checked
+        by ordinary decide; unbounded families use symbolic Lean proofs.
+        The transitive axiom audit, Comparator, lean4export, and NanoDa provide
+        mechanical checks independent of the generating agents.
+      prompting_notes: >-
+        The human operator selected the conjecture, required exact proof
+        boundaries and independent checks, and requested a direct substantive
+        Palomar repository. Private exploration preceded the Lean development;
+        this repository presents and proves the mathematical chain without a
+        separate source-to-wrapper formalization dependency.
+  spend_usd: "not tracked"
+  notes: "See DISCLOSURE.md. Detailed prompt, token, and monetary accounting was not retained."
+
+fidelity:
+  divergences: >-
+    The statement uses finite sets of integers constrained by their union to
+    equal the positive interval {1,...,n}; hence no negative or repeated labels
+    are admitted. The auxiliary n=0 case is included. The unbounded permutation
+    lemma is proved by six explicit Langford families and finite small cases,
+    rather than assuming a published sequence-existence theorem. Only the
+    conjecture for m=3 is addressed.
+
+review:
+  status: "self-assessed"
+  notes: >-
+    No independent human expert review, source-author endorsement, or completed
+    novelty survey is recorded. AI agents developed and cross-checked the proof.
+    See VERIFICATION.md for the precise mechanical checks completed at this
+    snapshot. Mechanical correctness and agreement of formal statements do not
+    establish priority, significance, or correctness of an informal interpretation.
+
+alignment:
+  namespace: "GurvichNaumova"
+  statements:
+    - source: "Gurvich–Naumova, arXiv:2508.00946v3, Conjecture 1"
+      lean: "GurvichNaumova.partition_into_powers_of_three"
+      module: "Solution"
+      status: "proved"
+      note: >-
+        Every natural n is quantified without an extra hypothesis. The block
+        size bound is three and the block sums are precisely nonnegative
+        integer powers of three. The empty interval is allowed as an extension.
+
+acknowledgements: >-
+  Gurvich and Naumova for the problem and elementary reductions; Mor and Linek
+  for the cited sequence constructions; Lean, Mathlib, Comparator, lean4export,
+  NanoDa, Landrun, and the Palomar policy and verifier projects. AI assistance
+  is disclosed above and in DISCLOSURE.md.
